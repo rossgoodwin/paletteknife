@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Extract color palettes from photographs.">
+    <meta name="author" content="Ross Goodwin">
+    <title>Palette Knife</title>
+
+<!--   
+  Palette Knife
+  Extracts color palettes from photographs.
+
+  Copyright (C) 2015  Ross Goodwin
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+  You can contact Ross Goodwin at ross.goodwin@gmail.com or address 
+  physical correspondence and verbal abuse to:
+
+  Ross Goodwin c/o ITP
+  721 Broadway
+  4th Floor
+  New York, NY 10003 
+-->
+
+
+    <!-- <link rel="stylesheet" href="css/capture.css" type="text/css" media="all"> -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="all">
+
+    <link href='https://fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<style>
+
+body {
+  font-family: 'Cousine', monospace;
+  background-color: #F2F1EF;
+}
+
+#colors {
+}
+
+.colorblock {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  border: 1px solid #333;
+  padding: 10px;
+  margin: 10px 10px 0px 10px;
+}
+
+.infoblock {
+  text-align: center;
+  font-size: 1em;
+}
+
+#canvas {
+  display: none;
+}
+
+.morespace {
+  margin: 25px;
+}
+
+#startbutton {
+  display:block;
+  position:absolute;
+  margin-left: 115px;
+}
+
+#video {
+  border: 1px solid black;
+  box-shadow: 2px 2px 3px black;
+  width:320px;
+  height:240px;
+}
+
+.output {
+  margin-left: 40px;
+  padding: 0px;
+  border: 1px solid black;
+  box-shadow: 2px 2px 3px black;
+  width: 320px;
+  height: 240px;
+  overflow: hidden;
+}
+
+#photo {
+  display: block;
+  height: 240px;
+  margin-left: auto;
+  margin-right: auto;
+
+  /*width: 340px;*/
+
+/*  width:320px;
+  height:240px;*/
+}
+
+.space-left {
+  margin-left: 100px;
+}
+
+.space-top {
+  margin-top: 75px;
+}
+
+.space-bottom {
+  margin-bottom: 50px;
+}
+
+.little-space-top {
+  /*margin-top: 100px;*/
+}
+
+.little-space-top {
+  margin-top: 10px;
+}
+
+.redlink {
+  color: #4DAF7C;
+}
+
+.redlink:hover {
+  color: #F2F1EF;
+  background-color: #4DAF7C;
+  text-decoration: none;
+}
+
+.lead {
+  color: #ABB7B7;
+}
+
+.footergraf {
+  text-align: center;
+}
+
+</style>
+
+  </head>
+
+  <body>
+
+<div class="row morespace space-left">
+  <!-- Palette Knife by Kelly Ness from the Noun Project -->
+  <img src="assets/palette_knife.png" height="45px" alt="Palette Knife by Kelly Ness from the Noun Project" />
+  <h1>
+    <a class="redlink" href="http://rossgoodwin.com/palette">PALETTE KNIFE</a>
+  </h1>
+  <p class="lead">extract color palettes from photographs</p>
+
+</div>
+
+<div class="row space-left">
+
+  <div class="camera col-lg-3 col-md-6 col-sm-12 col-xs-12 morespace space-bottom">
+    <video id="video">Video stream not available.</video>
+    <button id="startbutton" class="btn btn-danger little-space-top">CAPTURE</button>
+  </div>
+
+  <div class="output col-lg-3 col-md-6 col-sm-12 col-xs-12 morespace">
+    <img id="photo" alt="The screen capture will appear in this box.">
+  </div>
+
+  <form id="url-form" class="col-lg-3 col-md-6 col-sm-12 col-xs-12 morespace space-top">
+    <button type="submit" class="btn btn-danger">SUBMIT</button>
+    <input type="text" id="urlbox" name="in" value="" placeholder="image url" />
+  </form>
+
+  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 morespace">
+
+    <a href="#" onclick="document.getElementById('asd').click(); return false;" class="btn btn-danger" />UPLOAD FILE</a>
+    <input type="file" id="asd" style="visibility: hidden;" />
+
+  </div>
+
+   <!-- <input type="file" id="asd" class=/> -->
+
+</div>
+
+<div class="row morespace space-left">
+
+  <div id="colors" class="col-md-8 morespace"></div>
+
+</div>
+
+<div class="row morespace space-left">
+
+  <div class="col-md-10">
+      <p class="lead footergraf"><a class="redlink" href="http://rossgoodwin.com">Ross Goodwin</a>, 2015</p>
+  </div>
+
+</div>
+
+  <canvas id="canvas">
+  </canvas>
+
+    <script src="libraries/jquery-2.1.4.min.js"></script>
+
+    <script src="libraries/bootstrap.min.js"></script>
+
+    <script src="js/capture.js" type="text/javascript"></script>
+
+    <script src="libraries/p5.js" type="text/javascript"></script>
+
+    <!-- Uncomment the lines below to include extra p5 libraries -->
+    <!-- <script src="libraries/p5.dom.js" type="text/javascript"></script>
+    <script src="libraries/p5.sound.js" type="text/javascript"></script> -->
+
+    <script src="js/sketch.js" type="text/javascript"></script>
+
+<script>
+
+function readImage(input) {
+    if ( input.files && input.files[0] ) {
+        var FR = new FileReader();
+        FR.onload = function(e) {
+             $('#photo').attr( "src", e.target.result );
+             getColors( e.target.result );
+        };       
+        FR.readAsDataURL( input.files[0] );
+    }
+}
+
+$("#asd").change(function(){
+    // $('#colors').empty();
+    // $('#colors').append('<img src=\"assets/loading.gif\" alt=\"loading\" />');
+    readImage( this );
+});
+
+
+function convertImgToBase64(url, callback, outputFormat){
+  var img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onload = function(){
+      var canvas = document.createElement('CANVAS');
+      var ctx = canvas.getContext('2d');
+    canvas.height = this.height;
+    canvas.width = this.width;
+      ctx.drawImage(this,0,0);
+      var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+      callback(dataURL);
+      canvas = null; 
+  };
+  img.onerror = function() {
+      console.log('Image blocked by external site\'s cross-origin resource sharing policy. Try rehosting at imgur.com and submitting again.');
+      alert('Image blocked by external site\'s cross-origin resource sharing policy. Try rehosting at imgur.com and submitting again.');
+  };
+  img.src = url;
+}
+
+function processForm(e) {
+    if (e.preventDefault) e.preventDefault();
+
+    // $('#colors').empty();
+    // $('#colors').append('<img src=\"assets/loading.gif\" alt=\"loading\" />');
+
+    var extUrl = $("#urlbox").val();
+
+    convertImgToBase64(extUrl, function(url){
+        $('#photo').attr('src', extUrl);
+        getColors(url);
+    });
+    
+
+    return false;
+}
+
+var form = document.getElementById('url-form');
+if (form.attachEvent) {
+    form.attachEvent("submit", processForm);
+} else {
+    form.addEventListener("submit", processForm);
+}
+
+</script>
+
+  </body>
+</html>
